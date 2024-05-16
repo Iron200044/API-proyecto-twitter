@@ -1,15 +1,17 @@
-const express=require('express')
+const express=require('express');
+const bcrypt = require('bcryptjs');
+const User=require('../models/signupmodel');
 const router = express.Router();
 
 // Middleware para parsear el cuerpo de las solicitudes como JSON
 router.use(express.json());
 
 //Solicitud post para crear usuarios
-router.post('/',(req,res)=>{
+router.post('/', async(req,res)=>{
     const user=req.body.user;
     const email = req.body.email;
     const password=req.body.password;
-  
+    
     // Verificar si el cuerpo de la solicitud está vacío
     if (Object.keys(req.body).length === 0) {
       return res.status(400).send("El cuerpo de la solicitud está vacío. Proporcione los datos válidos, user, Email y password.");
@@ -25,15 +27,37 @@ router.post('/',(req,res)=>{
     if (!emailRegex.test(email)) {
       return res.status(400).send("El formato del correo electrónico no es válido.");
     }
-  
-    //Crear nuevo usuario
-    const newUser={
-      USER: user,
-      Email: email,
-      PASSWORD: password
-    };
-    // Devolver el objeto JSON del nuevo usuario como respuesta
-    res.json(newUser);
-  })
+
+    // Verificar si ya existe un usuario con el mismo correo electrónico
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        return res.status(400).send("Ya existe un usuario con este correo electrónico.");
+    }
+
+    // Verificar si ya existe un usuario con el mismo nombre de usuario
+    const existingUsername = await User.findOne({ user });
+    if (existingUsername) {
+        return res.status(400).send("El nombre de usuario ya está en uso.");
+    }
+
+    try{
+      // Hash de la contraseña
+      const hashedPassword = await bcrypt.hash(password, 10);
+      //Crear nuevo usuario
+      const newUser=new User({
+        user,
+        email,
+        password:hashedPassword,
+      });
+
+      // Guardar el usuario en la base de datos
+      await newUser.save();
+
+      // Devolver el objeto JSON del nuevo usuario como respuesta
+      res.json(newUser);
+    }catch(error){
+      res.status(500).send('Error al crear el usuario')
+    }
+  });
     
   module.exports=router;
