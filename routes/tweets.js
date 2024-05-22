@@ -11,7 +11,7 @@ router.post('/', authenticateJWT, async (req, res) => {
     const { content } = req.body;
 
     if (!content) {
-        return res.status(400).send('El contenido del tweet es requerido.');
+        return res.status(400).json({message:'El contenido del tweet es requerido.'});
     }
 
     try {
@@ -23,7 +23,7 @@ router.post('/', authenticateJWT, async (req, res) => {
         await tweet.save();
         res.status(201).json(tweet);
     } catch (error) {
-        res.status(500).send('Error al crear el tweet');
+        res.status(500).json({message:'Error al crear el tweet'});
     }
 });
 
@@ -33,19 +33,19 @@ router.put('/edit/:id', authenticateJWT, async (req, res) => {
     const { content } = req.body;
 
     if (!content) {
-        return res.status(400).send('El contenido del tweet es requerido.');
+        return res.status(400).json({message:'El contenido del tweet es requerido.'});
     }
 
     try {
         const tweet = await Tweet.findById(id);
         
         if (!tweet) {
-            return res.status(404).send('Tweet no encontrado.');
+            return res.status(404).json({message:'Tweet no encontrado.'});
         }
 
         // Verificar si el usuario autenticado es el dueño del tweet
         if (tweet.user.toString() !== req.user.id) {
-            return res.status(403).send('No autorizado para editar este tweet.');
+            return res.status(403).json({message:'No autorizado para editar este tweet.'});
         }
 
         tweet.content = content;
@@ -53,7 +53,7 @@ router.put('/edit/:id', authenticateJWT, async (req, res) => {
 
         res.status(200).json(tweet);
     } catch (error) {
-        res.status(500).send('Error al editar el tweet');
+        res.status(500).json({message:'Error al editar el tweet'});
     }
 });
 
@@ -66,7 +66,7 @@ router.delete('/delete/:id', authenticateJWT, async (req, res) => {
         const tweet = await Tweet.findById(id);
 
         if (!tweet) {
-            return res.status(404).send('Tweet no encontrado.');
+            return res.status(404).json({message:'Tweet no encontrado.'});
         }
 
         console.log('Tweet encontrado:', tweet);
@@ -75,15 +75,15 @@ router.delete('/delete/:id', authenticateJWT, async (req, res) => {
 
         // Verificar si el usuario autenticado es el dueño del tweet
         if (tweet.user.toString() !== req.user.id) {
-            return res.status(403).send('No autorizado para eliminar este tweet.');
+            return res.status(403).json({message:'No autorizado para eliminar este tweet.'});
         }
 
         await Tweet.findByIdAndDelete(id);
 
-        res.status(200).send('Tweet eliminado.');
+        res.status(200).json({message:'Tweet eliminado.'});
     } catch (error) {
         console.error('Error al eliminar el tweet:', error);
-        res.status(500).send('Error al eliminar el tweet');
+        res.status(500).json({message:'Error al eliminar el tweet'});
     }
 });
 
@@ -92,7 +92,7 @@ router.get('/search',authenticateJWT, async (req,res) => {
     const {query}=req.query;
     console.log('Query recibido:', query); // Agrega esto para depuración
     if (!query) {
-        return res.status(400).send('Query parameter is required.');
+        return res.status(400).json({message:'Query parameter is required.'});
     }
 
     try {
@@ -102,7 +102,7 @@ router.get('/search',authenticateJWT, async (req,res) => {
 
         res.status(200).json(tweets);
     } catch (error) {
-        res.status(500).send('Error al buscar tweets');
+        res.status(500).json({message:'Error al buscar tweets'});
     }
 });
 
@@ -114,12 +114,12 @@ router.post('/like/:id', authenticateJWT, async (req, res) => {
     try {
       const tweet = await Tweet.findById(tweetId);
       if (!tweet) {
-        return res.status(404).send('Tweet no encontrado.');
+        return res.status(404).json({message:'Tweet no encontrado.'});
       }
   
       // Verificar si el usuario ya ha dado like
       if (tweet.likes.includes(userId)) {
-        return res.status(400).send('Ya has dado like a este tweet.');
+        return res.status(400).json({message:'Ya has dado like a este tweet.'});
       }
   
       tweet.likes.push(userId);
@@ -127,7 +127,7 @@ router.post('/like/:id', authenticateJWT, async (req, res) => {
   
       res.status(200).json(tweet);
     } catch (error) {
-      res.status(500).send('Error al dar like al tweet');
+      res.status(500).json({message:'Error al dar like al tweet'});
     }
   });
 
@@ -139,12 +139,12 @@ router.post('/unlike/:id', authenticateJWT, async (req, res) => {
     try {
       const tweet = await Tweet.findById(tweetId);
       if (!tweet) {
-        return res.status(404).send('Tweet no encontrado.');
+        return res.status(404).json({message:'Tweet no encontrado.'});
       }
   
       // Verificar si el usuario no ha dado like
       if (!tweet.likes.includes(userId)) {
-        return res.status(400).send('No has dado like a este tweet.');
+        return res.status(400).json({message:'No has dado like a este tweet.'});
       }
   
       tweet.likes = tweet.likes.filter(id => id.toString() !== userId);
@@ -152,7 +152,7 @@ router.post('/unlike/:id', authenticateJWT, async (req, res) => {
   
       res.status(200).json(tweet);
     } catch (error) {
-      res.status(500).send('Error al quitar like al tweet');
+      res.status(500).json({message:'Error al quitar like al tweet'});
     }
   });
   

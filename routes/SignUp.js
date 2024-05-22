@@ -31,7 +31,7 @@ router.post('/', async(req,res)=>{
     // Verificar que la contraseña tenga al menos 8 caracteres y contenga al menos un caracter especial, una letra mayúscula, una letra minúscula y un número
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-      return res.status(400).json({ message: "Ya existe un usuario con este correo electrónico." });
+      return res.status(400).json({ message: "Contraseña debil, la contraseña debe tener minimo 8 caracteres, una mayuscula, una minuscula y un numero." });
     }
 
     // Verificar si ya existe un usuario con el mismo correo electrónico

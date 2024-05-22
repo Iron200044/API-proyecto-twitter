@@ -9,7 +9,7 @@ router.use(express.json());
 router.post('/',authenticateJWT, (req, res) => {
     // Elimina la cookie que contiene el token
     res.clearCookie('token');
-    res.status(200).send('Cierre de sesión exitoso.');
+    res.status(200).json({message:'Cierre de sesión exitoso.'});
 });
 
 module.exports = router;

@@ -15,12 +15,12 @@ router.post('/', async (req, res) => {
 
   // Verificar si el cuerpo de la solicitud está vacío
   if (Object.keys(req.body).length === 0) {
-    return res.status(400).send("El cuerpo de la solicitud está vacío. Proporcione los datos válidos, usuario y contraseña.");
+    return res.status(400).json({ error: "El cuerpo de la solicitud está vacío. Proporcione los datos válidos, usuario y contraseña." });
   }
 
   // Verificar que los campos sean del tipo correcto
   if (typeof identifier !== 'string' || typeof password !== 'string') {
-    return res.status(400).send("ERROR, tipo de dato incorrecto, recuerde que solo se recibe texto.");
+    return res.status(400).json({ error: "ERROR, tipo de dato incorrecto, recuerde que solo se recibe texto." });
   }
 
   try {
@@ -32,14 +32,14 @@ router.post('/', async (req, res) => {
     ] });
 
     if (!user) {
-      return res.status(400).send("El usuario no existe.");
+      return res.status(400).json({ error: "El usuario no existe." });
     }
 
     // Comparar la contraseña ingresada con el hash almacenado
     const isMatch = await bcrypt.compare(password, user.password);
     console.log('¿La contraseña coincide?', isMatch);
     if (!isMatch) {
-      return res.status(400).send("Contraseña incorrecta.");
+      return res.status(400).json({ error: "Contraseña incorrecta." });
     }
 
     // Generar token JWT
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
     res.json({ token });
   } catch (error) {
     console.error('Error en el inicio de sesión:', error);
-    res.status(500).send('Error en el inicio de sesión');
+    res.status(500).json({ error: 'Error en el inicio de sesión' });
   }
 });
 

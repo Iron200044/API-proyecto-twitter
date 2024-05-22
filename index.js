@@ -42,7 +42,7 @@ app.use('/home',authenticateJWT,HomeRoute);
 
 //Get default
 app.get('/', (req, res) => {
-    res.send('Pagina de inicio');
+    res.json({ message: 'Pagina de inicio' });
 });
 
 //Iniciar el servidor
