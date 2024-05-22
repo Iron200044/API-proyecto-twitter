@@ -14,36 +14,36 @@ router.post('/', async(req,res)=>{
     
     // Verificar si el cuerpo de la solicitud está vacío
     if (Object.keys(req.body).length === 0) {
-      return res.status(400).send("El cuerpo de la solicitud está vacío. Proporcione los datos válidos, user, Email y password.");
+      return res.status(400).json({ message: "El cuerpo de la solicitud está vacío. Proporcione los datos válidos, user, email y password." });
     }
   
     // Verificar que los campos sean del tipo correcto
     if (typeof user !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
-      return res.status(400).send("ERROR, tipo de dato incorrecto, recuerde que solo se recive texto.");
+      return res.status(400).json({ message: "ERROR, tipo de dato incorrecto, recuerde que solo se recibe texto." });
     }
   
     // Verificar que el email tenga una estructura válida
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).send("El formato del correo electrónico no es válido.");
+      return res.status(400).json({ message: "El formato del correo electrónico no es válido." });
     }
 
     // Verificar que la contraseña tenga al menos 8 caracteres y contenga al menos un caracter especial, una letra mayúscula, una letra minúscula y un número
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-      return res.status(400).send("La contraseña debe tener al menos 8 caracteres, incluir al menos una letra mayúscula, una letra minúscula, un número y un caracter especial.");
+      return res.status(400).json({ message: "Ya existe un usuario con este correo electrónico." });
     }
 
     // Verificar si ya existe un usuario con el mismo correo electrónico
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        return res.status(400).send("Ya existe un usuario con este correo electrónico.");
+      return res.status(400).json({ message: "Ya existe un usuario con este correo electrónico." });
     }
 
     // Verificar si ya existe un usuario con el mismo nombre de usuario
     const existingUsername = await User.findOne({ user });
     if (existingUsername) {
-        return res.status(400).send("El nombre de usuario ya está en uso.");
+      return res.status(400).json({ message: "El nombre de usuario ya está en uso." });
     }
 
     try{
@@ -62,7 +62,7 @@ router.post('/', async(req,res)=>{
       // Devolver el objeto JSON del nuevo usuario como respuesta
       res.json(newUser);
     }catch(error){
-      res.status(500).send('Error al crear el usuario')
+      res.status(500).json({ message: 'Error al crear el usuario' });
     }
   });
     
