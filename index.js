@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 // Configurar CORS
 app.use(cors({
-    origin: 'https://newtwitter-xi.vercel.app/',
+    origin: ['https://newtwitter-xi.vercel.app', 'http://localhost:5173'],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
     allowedHeaders: 'Content-Type,Authorization' // Encabezados permitidos
