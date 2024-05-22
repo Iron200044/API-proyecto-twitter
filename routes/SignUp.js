@@ -28,6 +28,12 @@ router.post('/', async(req,res)=>{
       return res.status(400).send("El formato del correo electrónico no es válido.");
     }
 
+    // Verificar que la contraseña tenga al menos 8 caracteres y contenga al menos un caracter especial, una letra mayúscula, una letra minúscula y un número
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).send("La contraseña debe tener al menos 8 caracteres, incluir al menos una letra mayúscula, una letra minúscula, un número y un caracter especial.");
+    }
+
     // Verificar si ya existe un usuario con el mismo correo electrónico
     const existingUser = await User.findOne({ email });
     if (existingUser) {
