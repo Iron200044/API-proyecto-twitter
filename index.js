@@ -15,7 +15,9 @@ app.use(cookieParser());
 
 // Configurar CORS
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        callback(null, true);
+    },
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
     allowedHeaders: 'Content-Type,Authorization' // Encabezados permitidos
