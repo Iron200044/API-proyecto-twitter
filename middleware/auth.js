@@ -15,6 +15,7 @@ const authenticateJWT = (req, res, next) => {
   try {
     const user = jwt.verify(token,SECRET_KEY);
     req.user = user;
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin); //.-.
     next();
   } catch (err) {
     return res
