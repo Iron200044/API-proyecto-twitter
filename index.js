@@ -14,15 +14,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Configurar CORS
-const allowedOrigins = [
-    "http://localhost:5173/",
-    "https://newtwitter-xi.vercel.app/",
-    "https://api-proyecto-twitter.vercel.app/"
-  ];
-  
   app.use(
     cors({
-      origin: allowedOrigins,
+      origin: '*',
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS method
       credentials: true, // If you're using cookies or sessions
     })
