@@ -17,6 +17,7 @@ app.use(cookieParser());
 const allowedOrigins = [
     "http://localhost:5173/",
     "https://newtwitter-xi.vercel.app/",
+    "https://api-proyecto-twitter.vercel.app/"
   ];
   
   app.use(
