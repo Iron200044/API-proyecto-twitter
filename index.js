@@ -16,7 +16,11 @@ app.use(cookieParser());
 // Configurar CORS
 app.use(cors({
     origin: (origin, callback) => {
-        callback(null, true);
+        if (origin === 'https://newtwitter-xi.vercel.app' || origin === 'http://localhost:5173') {
+            callback(null, true);
+        } else {
+            callback(new Error('No permitido'));
+        }
     },
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
