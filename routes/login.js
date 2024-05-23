@@ -44,9 +44,7 @@ router.post('/', async (req, res) => {
 
     // Generar token JWT
     const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true });
     console.log('Token generado:', token);
-
     // Devolver el token JWT
     res.json({ token });
   } catch (error) {

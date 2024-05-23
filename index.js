@@ -14,12 +14,18 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Configurar CORS
-app.use(cors({
-    origin: '*',
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
-    allowedHeaders: 'Content-Type,Authorization' // Encabezados permitidos
-}));
+const allowedOrigins = [
+    "http://localhost:5173/",
+    "https://newtwitter-xi.vercel.app/",
+  ];
+  
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS method
+      credentials: true, // If you're using cookies or sessions
+    })
+  );
 
 //Rutas
 const LogInRoute=require('./routes/login');
