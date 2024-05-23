@@ -14,9 +14,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Configurar CORS
+const allowedOrigins = [
+  "http://localhost:5173/",
+  "https://fp-daw-frontend.vercel.app/"
+];
   app.use(
     cors({
-      origin: '*',
+      origin: allowedOrigins,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Include OPTIONS method
       credentials: true, // If you're using cookies or sessions
     })
